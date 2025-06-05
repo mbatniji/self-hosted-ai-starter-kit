@@ -9,6 +9,7 @@ docker-compose pull
 echo "🧹 Stopping current containers..."
 docker-compose down
 
+
 echo "⬇️ Pulling required Ollama models (llama3, phi)..."
 docker-compose --profile cpu up -d ollama-pull-llama3 ollama-pull-phi
 

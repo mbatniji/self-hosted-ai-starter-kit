@@ -1,14 +1,18 @@
 #!/bin/bash
 
-echo "🔄 Pulling latest code from GitHub..."
-git pull
+echo "🔄 Checking for code updates from GitHub..."
+GIT_OUTPUT=$(git pull --quiet)
+echo "$GIT_OUTPUT"
 
-echo "📦 Pulling latest Docker images..."
-docker-compose pull
+if [[ "$GIT_OUTPUT" == "Already up to date." || -z "$GIT_OUTPUT" ]]; then
+  echo "✅ No new updates found. Skipping Docker image pull."
+else
+  echo "📦 Updates found. Pulling latest Docker images..."
+  docker-compose pull
+fi
 
 echo "🧹 Stopping current containers..."
 docker-compose down
-
 
 echo "⬇️ Pulling required Ollama models (llama3, phi)..."
 docker-compose --profile cpu up -d ollama-pull-llama3 ollama-pull-phi
